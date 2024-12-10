@@ -11,6 +11,11 @@ const register = async (req, res, next) => {
 
   const { fullname, email, password } = req.body;
 
+  const isUserExist = await User.findOne({ email });
+  if (isUserExist) {
+    return res.status(400).json({ message: "User already exist" });
+  }
+
   const hashedPassword = await User.hashPassword(password);
 
   const user = await createUser({
@@ -22,7 +27,10 @@ const register = async (req, res, next) => {
 
   const token = user.generateAuthToken();
 
-  res.status(201).json({ token, user });
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
+  res.status(201).json({ token, user: userResponse });
 };
 
 const login = async (req, res) => {
@@ -32,7 +40,7 @@ const login = async (req, res) => {
   }
 
   const { email, password } = req.body;
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email });
   if (!user) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
@@ -42,12 +50,15 @@ const login = async (req, res) => {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
   const token = user.generateAuthToken();
-  res.cookie("token", token).status(200).json({ user, token });
+  res.cookie("token", token).status(200).json({ user: userResponse, token });
 };
 
 const getUserProfile = async (req, res) => {
-  res.status(200).json(req.user);
+  res.status(200).json({ user: req.user });
 };
 
 const logout = async (req, res) => {
