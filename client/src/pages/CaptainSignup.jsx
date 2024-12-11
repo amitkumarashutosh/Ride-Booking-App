@@ -1,24 +1,47 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 const CaptainSignup = () => {
   const [captainData, setCaptainData] = useState({
-    fullName: {
-      firstName: "",
+    fullname: {
+      firstname: "",
       lastName: "",
     },
     email: "",
     password: "",
+    vehicle: {
+      capacity: 1,
+      vehicleType: "",
+      color: "",
+      plate: "",
+    },
   });
+
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const { captain, setCaptain } = useContext(CaptainDataContext);
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
 
-    if (name === "firstName" || name === "lastName") {
+    if (name === "firstname" || name === "lastName") {
       setCaptainData({
         ...captainData,
-        fullName: {
-          ...captainData.fullName,
+        fullname: {
+          ...captainData.fullname,
+          [name]: value,
+        },
+      });
+    } else if (Object.keys(captainData.vehicle).includes(name)) {
+      setCaptainData({
+        ...captainData,
+        vehicle: {
+          ...captainData.vehicle,
           [name]: value,
         },
       });
@@ -30,9 +53,24 @@ const CaptainSignup = () => {
     }
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(captainData);
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/captains/register`,
+        captainData
+      );
+      if (response.status === 201) {
+        setCaptain(response.data.captain);
+        localStorage.setItem("token", response.data.token);
+        navigate("/home-captain");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -43,16 +81,16 @@ const CaptainSignup = () => {
         </h1>
         <form className="space-y-4" onSubmit={submitHandler}>
           <div>
-            <label htmlFor="firstName" className="block text-gray-600 mb-1">
+            <label htmlFor="firstname" className="block text-gray-600 mb-1">
               Full Name
             </label>
             <div className="flex space-x-4">
               <div className="flex-1">
                 <input
                   type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={captainData.fullName.firstName}
+                  id="firstname"
+                  name="firstname"
+                  value={captainData.fullname.firstname}
                   onChange={changeHandler}
                   placeholder="First Name"
                   required
@@ -64,7 +102,7 @@ const CaptainSignup = () => {
                   type="text"
                   id="lastName"
                   name="lastName"
-                  value={captainData.fullName.lastName}
+                  value={captainData.fullname.lastName}
                   onChange={changeHandler}
                   placeholder="Last Name"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -102,12 +140,85 @@ const CaptainSignup = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
-          >
-            Sign Up
-          </button>
+          <div>
+            <label htmlFor="vehicle" className="block text-gray-600 mb-1">
+              Vehicle Information
+            </label>
+            <div className="space-y-4">
+              <div className="flex space-x-4">
+                <div className="flex-1">
+                  <select
+                    id="vehicleType"
+                    name="vehicleType"
+                    value={captainData.vehicle.vehicleType}
+                    onChange={changeHandler}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="" disabled>
+                      Vehicle Type
+                    </option>
+                    <option value="car">car</option>
+                    <option value="auto">auto</option>
+                    <option value="motorcycle">motorcycle</option>
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    id="capacity"
+                    name="capacity"
+                    value={captainData.vehicle.capacity}
+                    onChange={changeHandler}
+                    placeholder="capacity"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md "
+                  />
+                </div>
+              </div>
+              <div className="flex space-x-4">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    id="color"
+                    name="color"
+                    value={captainData.vehicle.color}
+                    onChange={changeHandler}
+                    placeholder="Color"
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    id="plate"
+                    name="plate"
+                    value={captainData.vehicle.plate}
+                    onChange={changeHandler}
+                    placeholder="License Plate"
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          {loading ? (
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 flex justify-center items-center gap-3"
+              disabled
+            >
+              <Loader2 className="ml-2 h-4 w-4 animate-spin" /> Please wait...
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
+            >
+              Sign Up
+            </button>
+          )}
         </form>
         <div className="flex items-center my-4">
           <hr className="flex-1 border-gray-300" />

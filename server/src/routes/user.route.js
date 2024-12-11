@@ -17,7 +17,7 @@ router.post(
       .isLength({ min: 3 })
       .withMessage("First name must be at least 6 characters long"),
     body("password")
-      .isLength({ min: 6 })
+      .isLength({ min: 4 })
       .withMessage("Password must be 6 characters long"),
   ],
   register

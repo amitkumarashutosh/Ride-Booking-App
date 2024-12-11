@@ -1,19 +1,42 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { UserDataContext } from "../context/UserContext";
 
 const UserLogin = () => {
   const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const changeHandler = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  const submitHandler = (e) => {
+  const { user, setUser } = useContext(UserDataContext);
+
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(userData);
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/users/login`,
+        userData
+      );
+      if (response.status === 200) {
+        setUser(response.data.user);
+        localStorage.setItem("token", response.data.token);
+        navigate("/home");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -52,12 +75,22 @@ const UserLogin = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
-          >
-            Login
-          </button>
+          {loading ? (
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 flex justify-center items-center gap-3"
+              disabled
+            >
+              <Loader2 className="ml-2 h-4 w-4 animate-spin" /> Please wait...
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
+            >
+              Login
+            </button>
+          )}
         </form>
         <div className="flex items-center my-4">
           <hr className="flex-1 border-gray-300" />

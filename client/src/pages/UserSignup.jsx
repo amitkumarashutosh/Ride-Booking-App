@@ -1,24 +1,32 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { UserDataContext } from "../context/UserContext";
 
 const CaptainSignup = () => {
   const [userData, setUserData] = useState({
-    fullName: {
-      firstName: "",
-      lastName: "",
+    fullname: {
+      firstname: "",
+      lastname: "",
     },
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const { user, setUser } = useContext(UserDataContext);
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
 
-    if (name === "firstName" || name === "lastName") {
+    if (name === "firstname" || name === "lastname") {
       setUserData({
         ...userData,
-        fullName: {
-          ...userData.fullName,
+        fullname: {
+          ...userData.fullname,
           [name]: value,
         },
       });
@@ -30,9 +38,24 @@ const CaptainSignup = () => {
     }
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(userData);
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/users/register`,
+        userData
+      );
+      if (response.status === 201) {
+        setUser(response.data.user);
+        localStorage.setItem("token", response.data.token);
+        navigate("/home");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -43,16 +66,16 @@ const CaptainSignup = () => {
         </h1>
         <form className="space-y-4" onSubmit={submitHandler}>
           <div>
-            <label htmlFor="firstName" className="block text-gray-600 mb-1">
+            <label htmlFor="firstname" className="block text-gray-600 mb-1">
               Full Name
             </label>
             <div className="flex space-x-4">
               <div className="flex-1">
                 <input
                   type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={userData.fullName.firstName}
+                  id="firstname"
+                  name="firstname"
+                  value={userData.fullname.firstname}
                   onChange={changeHandler}
                   placeholder="First Name"
                   required
@@ -62,9 +85,9 @@ const CaptainSignup = () => {
               <div className="flex-1">
                 <input
                   type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={userData.fullName.lastName}
+                  id="lastname"
+                  name="lastname"
+                  value={userData.fullname.lastname}
                   onChange={changeHandler}
                   placeholder="Last Name"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -102,12 +125,22 @@ const CaptainSignup = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
-          >
-            Sign Up
-          </button>
+          {loading ? (
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 flex justify-center items-center gap-3"
+              disabled
+            >
+              <Loader2 className="ml-2 h-4 w-4 animate-spin" /> Please wait...
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
+            >
+              Sign Up
+            </button>
+          )}
         </form>
         <div className="flex items-center my-4">
           <hr className="flex-1 border-gray-300" />

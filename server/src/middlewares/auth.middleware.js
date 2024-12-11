@@ -19,7 +19,10 @@ export const authUser = async (req, res, next) => {
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decode._id);
 
-    req.user = user;
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    req.user = userResponse;
     return next();
   } catch (error) {
     return res.status(401).json({ message: "Unauthorized" });

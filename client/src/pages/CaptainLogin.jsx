@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 const CaptainLogin = () => {
   const [captainData, setCaptainData] = useState({
@@ -7,13 +10,34 @@ const CaptainLogin = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const { captain, setCaptain } = useContext(CaptainDataContext);
+
   const changeHandler = (e) => {
     setCaptainData({ ...captainData, [e.target.name]: e.target.value });
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(captainData);
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/captains/login`,
+        captainData
+      );
+      if (response.status === 200) {
+        setCaptain(response.data.captain);
+        localStorage.setItem("token", response.data.token);
+        navigate("/home");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -52,12 +76,22 @@ const CaptainLogin = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
-          >
-            Login
-          </button>
+          {loading ? (
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 flex justify-center items-center gap-3"
+              disabled
+            >
+              <Loader2 className="ml-2 h-4 w-4 animate-spin" /> Please wait...
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
+            >
+              Sign Up
+            </button>
+          )}
         </form>
         <div className="flex items-center my-4">
           <hr className="flex-1 border-gray-300" />
