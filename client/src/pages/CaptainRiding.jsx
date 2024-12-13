@@ -38,10 +38,12 @@ const CaptainRiding = () => {
           </div>
         </div>
       </div>
-      <FinishRide
-        finishRidePanel={finishRidePanel}
-        setFinishRidePanel={setFinishRidePanel}
-      />
+      <div className="flex justify-center  items-center">
+        <FinishRide
+          finishRidePanel={finishRidePanel}
+          setFinishRidePanel={setFinishRidePanel}
+        />
+      </div>
     </div>
   );
 };
