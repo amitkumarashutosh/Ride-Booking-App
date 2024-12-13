@@ -18,6 +18,9 @@ const Home = () => {
   const [pickupSuggestions, setPickupSuggestions] = useState([]);
   const [destinationSuggestions, setDestinationSuggestions] = useState([]);
   const [activeField, setActiveField] = useState(null);
+  const [fare, setFare] = useState({});
+  const [vehicle, setVehicle] = useState({ type: "", image: "" });
+  const [ride, setRide] = useState(null);
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
@@ -55,18 +58,50 @@ const Home = () => {
     }
   };
 
-  const changeHandler = (e) => {
-    console.log(e.target.value);
-  };
-
   const submitHandler = (e) => {
     e.preventDefault();
+  };
+
+  const findTripFare = async () => {
+    setVehiclePanel(true);
+    setPanelOpen(false);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/rides/get-fare`,
+        {
+          params: { pickup, destination },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setFare(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const createRide = async () => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/api/rides/create`,
+      {
+        pickup,
+        destination,
+        vehicleType: vehicle.type,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    console.log(response.data);
   };
 
   return (
     <div className="w-full flex justify-center overflow-hidden bg-gray-100">
       <div className="w-full md:max-w-[50%] relative">
-        <h1 className="text-3xl absolute left-6 top-6 font-extrabold text-gray-900">
+        <h1 className="text-3xl absolute left-6 top-6 font-normal text-gray-900">
           RideEase
         </h1>
         <div className="h-screen w-full">
@@ -113,10 +148,7 @@ const Home = () => {
                 className="w-full py-3 px-4 pl-8 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
-                onClick={() => {
-                  setVehiclePanel(true);
-                  setPanelOpen(false);
-                }}
+                onClick={findTripFare}
                 disabled={pickup === "" || destination === ""}
                 className={`w-full bg-black text-white p-2 text-lg rounded ${
                   pickup === "" || destination === ""
@@ -149,16 +181,27 @@ const Home = () => {
         </div>
       </div>
       <VehiclePanle
+        fare={fare}
+        setVehicle={setVehicle}
         setVehiclePanel={setVehiclePanel}
         vehiclePanel={vehiclePanel}
         setConfirmRidePanel={setConfirmRidePanel}
       />
       <ConfirmRide
+        pickup={pickup}
+        destination={destination}
+        fare={fare}
+        vehicle={vehicle}
+        createRide={createRide}
         confirmRidePanel={confirmRidePanel}
         setConfirmRidePanel={setConfirmRidePanel}
         setVehicleFound={setVehicleFound}
       />
       <LookingForDriver
+        pickup={pickup}
+        destination={destination}
+        fare={fare}
+        vehicle={vehicle}
         vehicleFound={vehicleFound}
         setVehicleFound={setVehicleFound}
       />

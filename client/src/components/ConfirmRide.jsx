@@ -5,11 +5,16 @@ const ConfirmRide = ({
   confirmRidePanel,
   setConfirmRidePanel,
   setVehicleFound,
+  createRide,
+  vehicle,
+  pickup,
+  destination,
+  fare,
 }) => {
   return (
     <div
       className={`fixed w-full z-10 bottom-0 ${
-        confirmRidePanel === true ? "translate-y-0" : "translate-y-full"
+        confirmRidePanel ? "translate-y-0" : "translate-y-full"
       } bg-white p-5 transition-all duration-500 overflow-hidden md:max-w-[50%] mx-auto rounded-t-lg shadow-lg`}
     >
       <div className="flex justify-between items-center mb-6">
@@ -21,36 +26,31 @@ const ConfirmRide = ({
       </div>
 
       <div className="flex gap-4 flex-col items-center justify-center">
-        <img
-          src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png"
-          alt="RideEase Car"
-          className="h-24 mb-6"
-        />
+        <img src={vehicle.image} alt="RideEase Car" className="h-24 mb-6" />
         <div className="w-full">
-          <div className="flex w-full items-center mb-2 gap-4 justify-start p-4 border-2 border-gray-300 hover:shadow-lg active:border-black rounded-lg transition-all">
-            <LocateFixed className="text-xl" />
+          {/* Pickup Section */}
+          <div className="flex w-full items-center mb-2 gap-4 justify-start p-4 border-b-2 border-gray-300 ">
+            <LocateFixed className="text-xl text-green-600" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">12/2 MS Residency</h3>
-              <p className="text-sm text-gray-600">
-                3rd B main road, Banglore 511023
-              </p>
+              <h3 className="font-normal text-xl text-gray-800">{pickup}</h3>
             </div>
           </div>
           {/* Destination Section */}
-          <div className="flex w-full items-center mb-2 gap-4 justify-start p-4 border-2 border-gray-300 hover:shadow-lg active:border-black rounded-lg transition-all">
-            <MapPin className="text-xl" />
+          <div className="flex w-full items-center mb-2 gap-4 justify-start p-4 border-b-2 border-gray-300 ">
+            <MapPin className="text-xl text-blue-600" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">12/2 MS Residency</h3>
-              <p className="text-sm text-gray-600">
-                3rd B main road, Banglore 511023
-              </p>
+              <h3 className="font-normal text-xl text-gray-800">
+                {destination}
+              </h3>
             </div>
           </div>
           {/* Payment Section */}
-          <div className="flex w-full items-center mb-2 gap-4 justify-start p-4 border-2 border-gray-300 hover:shadow-lg active:border-black rounded-lg transition-all">
-            <Coins className="text-xl" />
+          <div className="flex w-full items-center mb-2 gap-4 justify-start p-4 border-b-2 border-gray-300 ">
+            <Coins className="text-xl text-yellow-500" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">₹200.9</h3>
+              <h3 className="font-semibold text-xl text-gray-800">
+                ₹{fare[vehicle.type]}
+              </h3>
               <p className="text-sm text-gray-600">Cash</p>
             </div>
           </div>
@@ -60,6 +60,7 @@ const ConfirmRide = ({
           onClick={() => {
             setVehicleFound(true);
             setConfirmRidePanel(false);
+            createRide();
           }}
           className="w-full bg-green-600 text-white font-semibold p-3 rounded-lg cursor-pointer hover:bg-green-700 transition-all"
         >

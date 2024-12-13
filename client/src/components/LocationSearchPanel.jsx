@@ -10,27 +10,22 @@ const LocationSearchPanel = ({
   activeField,
 }) => {
   const handleSuggestionClick = (element) => {
-    if (activeField == "pickup") setPickup(element);
+    if (activeField === "pickup") setPickup(element);
     else setDestination(element);
-
-    // setVehiclePanel(true);
-    // setPanelOpen(false);
   };
 
   return (
-    <div>
-      {suggestions.map((location, index) => {
-        return (
-          <div
-            key={index}
-            className="flex gap-3 items-center justify-start py-3 px-5 text-lg font-semibold border-2 border-gray-100 hover:bg-gray-100 active:border-black rounded m-1 cursor-pointer"
-            onClick={() => handleSuggestionClick(location)}
-          >
-            <MapPin className="w-8" />
-            <h4 className="truncate">{location}</h4>
-          </div>
-        );
-      })}
+    <div className="p-2">
+      {suggestions.map((location, index) => (
+        <div
+          key={index}
+          className="flex gap-3 items-center py-3 px-4 text-lg font-normal border-b-2 border-gray-200 cursor-pointer"
+          onClick={() => handleSuggestionClick(location)}
+        >
+          <MapPin className="w-6 text-blue-600" />
+          <h4 className="truncate text-gray-800">{location}</h4>
+        </div>
+      ))}
     </div>
   );
 };

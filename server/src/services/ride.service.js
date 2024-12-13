@@ -9,7 +9,7 @@ const generateOpt = (num) => {
   return otp;
 };
 
-const getFare = async (pickup, destination) => {
+export const getFare = async (pickup, destination) => {
   if (!pickup || !destination) {
     throw new Error("Pickup and destination are required");
   }
