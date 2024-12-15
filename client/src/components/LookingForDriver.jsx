@@ -30,7 +30,7 @@ const LookingForDriver = ({
           <div className="flex w-full items-center mb-2 gap-4 justify-start py-3 px-4 border-b-2 border-gray-200">
             <LocateFixed className="text-blue-600 text-lg" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-lg">{pickup}</h3>
+              <h3 className="font-normal text-lg">{pickup}</h3>
             </div>
           </div>
 
@@ -38,7 +38,7 @@ const LookingForDriver = ({
           <div className="flex w-full items-center mb-2 gap-4 justify-start py-3 px-4 border-b-2 border-gray-200">
             <MapPin className="text-blue-600 text-lg" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-lg">{destination}</h3>
+              <h3 className="font-normal text-lg">{destination}</h3>
             </div>
           </div>
 
@@ -46,7 +46,7 @@ const LookingForDriver = ({
           <div className="flex w-full items-center mb-2 gap-4 justify-start py-3 px-4 border-b-2 border-gray-200">
             <Coins className="text-blue-600 text-lg" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-lg">₹{fare[vehicle.type]}</h3>
+              <h3 className="font-normal text-lg">₹{fare[vehicle.type]}</h3>
               <p className="text-sm text-gray-600">Cash</p>
             </div>
           </div>

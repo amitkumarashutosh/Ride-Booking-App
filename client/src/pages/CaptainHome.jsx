@@ -2,12 +2,22 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import CaptainDetails from "../components/CaptainDetails";
 import RidePopup from "../components/RidePopup";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ConfirmRidePopup from "../components/ConfirmRidePopup";
+import { SocketContext } from "../context/SocketContext";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(true);
   const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
+
+  const { socket } = useContext(SocketContext);
+  const { captain } = useContext(CaptainDataContext);
+
+  useEffect(() => {
+    socket.emit("join", { userType: "captain", userId: captain._id });
+  }, [captain]);
+
   return (
     <div className="bg-gray-100">
       <div className="h-screen lg:max-w-[50%] mx-auto bg-white shadow-lg">

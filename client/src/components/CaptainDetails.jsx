@@ -1,6 +1,9 @@
-import { ArrowLeft, Gauge, Notebook, Timer } from "lucide-react";
+import { Gauge, Notebook, Timer } from "lucide-react";
+import { useContext } from "react";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 const CaptainDetails = () => {
+  const { captain } = useContext(CaptainDataContext);
   return (
     <div>
       {/* Driver Info */}
@@ -11,7 +14,9 @@ const CaptainDetails = () => {
             alt="Driver"
             className="h-12 w-12 rounded-full object-cover"
           />
-          <h4 className="font-bold text-lg text-gray-800">Ashu Singh</h4>
+          <h4 className="font-bold text-lg text-gray-800 capitalize">
+            {captain.fullname.firstname} {captain.fullname.lastname}
+          </h4>
         </div>
         <div className="text-right">
           <h4 className="font-semibold text-xl text-green-600">₹295.9</h4>

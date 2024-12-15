@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { ArrowDown } from "lucide-react";
+import React, { useContext, useEffect, useState } from "react";
+import { ArrowDown, User } from "lucide-react";
 import axios from "axios";
 import LocationSearchPanel from "../components/LocationSearchPanel";
 import VehiclePanle from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
+import { SocketContext } from "../context/SocketContext";
+import { UserDataContext } from "../context/UserContext";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -21,6 +23,13 @@ const Home = () => {
   const [fare, setFare] = useState({});
   const [vehicle, setVehicle] = useState({ type: "", image: "" });
   const [ride, setRide] = useState(null);
+
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserDataContext);
+
+  useEffect(() => {
+    socket.emit("join", { userType: "user", userId: user._id });
+  }, [user]);
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
