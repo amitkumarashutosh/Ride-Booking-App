@@ -1,0 +1,403 @@
+{
+	"info": {
+		"_postman_id": "46bfb456-2a16-4cbf-86c5-4c3e6692e003",
+		"name": "Uber",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29978583"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullname\":{\n        \"firstname\":\"amit\",\n        \"lastname\":\"ashu\"\n    },\n    \"email\":\"amit@gmail.com\",\n    \"password\":\"amitashu\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/users/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"amit@gmail.com\",\n    \"password\":\"amit1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/users/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/users/profile",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/users/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "captain",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullname\":{\n        \"firstname\":\"amit\",\n        \"lastname\":\"kumar\"\n    },\n    \"email\":\"ashutosh@gmail.com\",\n    \"password\":\"amitashu\",\n    \"vehicle\":{\n        \"color\":\"red\",\n        \"plate\":\"1234\",\n        \"vehicleType\":\"auto\",\n        \"capacity\":1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/captains/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"captains",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"ashutosh@gmail.com\",\n    \"password\":\"amitashu\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/captains/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"captains",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/captains/profile",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"captains",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/captains/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"captains",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "maps",
+			"item": [
+				{
+					"name": "Get coordinates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/maps/get-coordinates?address=aet college banglore",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"maps",
+								"get-coordinates"
+							],
+							"query": [
+								{
+									"key": "address",
+									"value": "aet college banglore"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get distace time",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/maps/get-distance-time?origin=patna&destination=kolkata",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"maps",
+								"get-distance-time"
+							],
+							"query": [
+								{
+									"key": "origin",
+									"value": "patna"
+								},
+								{
+									"key": "destination",
+									"value": "kolkata"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get suggestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/maps/get-suggestions?input=",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"maps",
+								"get-suggestions"
+							],
+							"query": [
+								{
+									"key": "input",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ride",
+			"item": [
+				{
+					"name": "Create ride",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pickup\":\"danapur railway station\",\n    \"destination\":\"patna railway station\",\n    \"vehicleType\":\"motorcycle\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/rides/create",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get fare",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/rides/get-fare?pickup=patna station&destination=patna danapur station",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"get-fare"
+							],
+							"query": [
+								{
+									"key": "pickup",
+									"value": "patna station"
+								},
+								{
+									"key": "destination",
+									"value": "patna danapur station"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Start ride",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/rides/start-ride?rideId=6760a3c57a2c42bedd2102d9&otp=5289",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"start-ride"
+							],
+							"query": [
+								{
+									"key": "rideId",
+									"value": "6760a3c57a2c42bedd2102d9"
+								},
+								{
+									"key": "otp",
+									"value": "5289"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm ride",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
