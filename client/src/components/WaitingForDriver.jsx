@@ -1,7 +1,7 @@
 import { ArrowDown, Coins, LocateFixed, MapPin } from "lucide-react";
 import React from "react";
 
-const WaitingForDriver = ({ waitingForDriver, setWaitingForDriver }) => {
+const WaitingForDriver = ({ waitingForDriver, setWaitingForDriver, ride }) => {
   return (
     <div
       className={`fixed w-full z-10 bottom-0 ${
@@ -25,9 +25,15 @@ const WaitingForDriver = ({ waitingForDriver, setWaitingForDriver }) => {
             className="h-20 mb-6"
           />
           <div className="flex flex-col text-center">
-            <h3 className="font-bold text-lg">Ashu Kr</h3>
-            <p className="text-md font-semibold text-gray-600">XCV 232 BR</p>
+            <h3 className="font-bold text-lg capitalize">
+              {ride?.captain.fullname.firstname}
+              {ride?.captain.fullname.lastname}
+            </h3>
+            <p className="text-md font-semibold text-gray-600">
+              {ride?.captain.vehicle.plate}
+            </p>
             <p className="text-sm text-gray-600">Maruti Suzuki</p>
+            <p className="text-sm text-gray-600">{ride?.otp}</p>
           </div>
         </div>
 
@@ -36,27 +42,21 @@ const WaitingForDriver = ({ waitingForDriver, setWaitingForDriver }) => {
           <div className="flex w-full items-center mb-4 gap-4 justify-start p-4 border-2 border-gray-300 hover:shadow-lg active:border-black rounded-lg transition-all">
             <LocateFixed className="text-xl" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">12/2 MS Residency</h3>
-              <p className="text-sm text-gray-600">
-                3rd B main road, Banglore 511023
-              </p>
+              <h3 className="font-normal text-xl">{ride?.pickup}</h3>
             </div>
           </div>
           {/* Destination Address Section */}
           <div className="flex w-full items-center mb-4 gap-4 justify-start p-4 border-2 border-gray-300 hover:shadow-lg active:border-black rounded-lg transition-all">
             <MapPin className="text-xl" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">12/2 MS Residency</h3>
-              <p className="text-sm text-gray-600">
-                3rd B main road, Banglore 511023
-              </p>
+              <h3 className="font-normal text-xl">{ride?.destination}</h3>
             </div>
           </div>
           {/* Payment Section */}
           <div className="flex w-full items-center mb-4 gap-4 justify-start p-4 border-2 border-gray-300 hover:shadow-lg active:border-black rounded-lg transition-all">
             <Coins className="text-xl" />
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">₹200.9</h3>
+              <h3 className="font-semibold text-xl">₹{ride?.fare}</h3>
               <p className="text-sm text-gray-600">Cash</p>
             </div>
           </div>

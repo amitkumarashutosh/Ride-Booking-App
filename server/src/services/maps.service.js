@@ -88,16 +88,15 @@ const getAutoCompleteSuggestion = async (input) => {
   }
 };
 
-const getCaptainsInTheRadius = async (lng, lat, radius) => {
+const getCaptainsInTheRadius = async (lat, lng, radius = 2) => {
   try {
     const captains = await Captain.find({
       location: {
         $geoWithin: {
-          $centerSphere: [[lng, lat], radius / 6378.1],
+          $centerSphere: [[lat, lng], radius / 6371],
         },
       },
     });
-
     return captains;
   } catch (error) {
     console.error("Error fetching captains in the radius:", error);

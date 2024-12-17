@@ -1,15 +1,37 @@
 import { ArrowDown, Coins, LocateFixed, MapPin } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ConfirmRidePopup = ({
   setConfirmRidePopupPanel,
   confirmRidePopupPanel,
+  ride,
 }) => {
   const [otp, setOtp] = useState("");
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(otp);
+    const response = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/api/rides/start-ride`,
+      {
+        params: {
+          rideId: ride._id,
+          otp: otp,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    console.log(response);
+    if (response.status === 200) {
+      setConfirmRidePopupPanel(false);
+      // setRidePopupPanel(false);
+      navigate("/captain-riding", { state: { ride: ride } });
+    }
   };
   return (
     <div
@@ -38,7 +60,9 @@ const ConfirmRidePopup = ({
               alt="Driver"
               className="h-14 w-14 rounded-full object-cover"
             />
-            <h4 className="font-bold text-lg text-gray-800">Ashu Singh</h4>
+            <h4 className="font-bold text-lg text-gray-800">
+              {ride?.user?.fullname.firstname} {ride?.user?.fullname.lastname}
+            </h4>
           </div>
           <p className="font-medium text-lg text-gray-700">2.3 Km</p>
         </div>
@@ -49,12 +73,9 @@ const ConfirmRidePopup = ({
           <div className="flex items-center gap-4 p-4 border border-gray-300 rounded-lg hover:shadow-md transition-all">
             <LocateFixed className="text-green-600 h-6 w-6" />
             <div>
-              <h4 className="font-semibold text-lg text-gray-800">
-                12/2 MS Residency
+              <h4 className="font-normal text-lg text-gray-800">
+                {ride?.pickup}
               </h4>
-              <p className="text-sm text-gray-500">
-                3rd B Main Road, Bangalore 511023
-              </p>
             </div>
           </div>
 
@@ -62,12 +83,9 @@ const ConfirmRidePopup = ({
           <div className="flex items-center gap-4 p-4 border border-gray-300 rounded-lg hover:shadow-md transition-all">
             <MapPin className="text-blue-600 h-6 w-6" />
             <div>
-              <h4 className="font-semibold text-lg text-gray-800">
-                12/2 MS Residency
+              <h4 className="font-normal text-lg text-gray-800">
+                {ride?.destination}
               </h4>
-              <p className="text-sm text-gray-500">
-                3rd B Main Road, Bangalore 511023
-              </p>
             </div>
           </div>
 
@@ -83,7 +101,7 @@ const ConfirmRidePopup = ({
 
         {/* Action Buttons */}
         <div className="w-full">
-          <form>
+          <form onSubmit={submitHandler}>
             <input
               type="text"
               className="w-full py-3 px-4 pl-8 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
@@ -92,13 +110,12 @@ const ConfirmRidePopup = ({
               value={otp}
             />
             <div className="w-full flex gap-4">
-              <Link
-                to="/captain-riding"
+              <button
                 className="flex-1 bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition-all text-center"
                 aria-label="Confirm ride"
               >
                 Confirm
-              </Link>
+              </button>
 
               <button
                 onClick={() => {

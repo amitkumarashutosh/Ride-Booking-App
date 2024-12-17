@@ -32,7 +32,12 @@ export const initializeSocket = (server) => {
         return socket.emit("error", { message: "Invalid location data" });
       }
 
-      await Captain.findByIdAndUpdate(userId, { location });
+      await Captain.findByIdAndUpdate(userId, {
+        location: {
+          lat: location.lat,
+          lng: location.lng,
+        },
+      });
     });
 
     socket.on("disconnect", () => {
@@ -41,9 +46,9 @@ export const initializeSocket = (server) => {
   });
 };
 
-export const sendMessageToSocket = (socketId, message) => {
+export const sendMessageToSocket = (socketId, messageObject) => {
   if (io) {
-    io.to(socketId).emit("message", message);
+    io.to(socketId).emit(messageObject.event, messageObject.data);
   } else {
     console.log("Socket.io not initialized");
   }

@@ -1,7 +1,18 @@
 import { Coins, Home, MapPin } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { SocketContext } from "../context/SocketContext";
+import { useContext } from "react";
 
 const Riding = () => {
+  const location = useLocation();
+  const { ride } = location.state || {};
+  const { socket } = useContext(SocketContext);
+  const navigate = useNavigate();
+
+  socket.on("ride-ended", (data) => {
+    navigate("/home");
+  });
+
   return (
     <div className="bg-gray-100">
       <div className="h-screen md:max-w-[50%] mx-auto bg-white">
@@ -25,9 +36,11 @@ const Riding = () => {
                 className="h-20 mb-6"
               />
               <div className="flex flex-col text-center">
-                <h3 className="font-bold text-lg">Ashu Kr</h3>
+                <h3 className="font-bold text-lg">
+                  {ride?.captain?.fullname.firstname}
+                </h3>
                 <p className="text-md font-semibold text-gray-600">
-                  XCV 232 BR
+                  {ride?.captain?.vehicle.plate}
                 </p>
                 <p className="text-sm text-gray-600">Maruti Suzuki</p>
               </div>
@@ -38,17 +51,14 @@ const Riding = () => {
               <div className="flex w-full items-center mb-1 gap-2 justify-start p-4 border-b-2 border-gray-300 hover:shadow-lg active:border-black rounded-lg transition-all">
                 <MapPin className="text-xl" />
                 <div className="flex flex-col">
-                  <h3 className="font-semibold text-xl">12/2 MS Residency</h3>
-                  <p className="text-sm text-gray-600">
-                    3rd B main road, Banglore 511023
-                  </p>
+                  <h3 className="font-normal text-xl">{ride?.destination}</h3>
                 </div>
               </div>
               {/* Payment Section */}
               <div className="flex w-full items-center mb-1 gap-4 justify-start p-4 border-b-2 border-gray-300 hover:shadow-lg active:border-black rounded-lg transition-all">
                 <Coins className="text-xl" />
                 <div className="flex flex-col">
-                  <h3 className="font-semibold text-xl">₹200.9</h3>
+                  <h3 className="font-semibold text-xl">₹{ride?.fare}</h3>
                   <p className="text-sm text-gray-600">Cash</p>
                 </div>
               </div>

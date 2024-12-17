@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { ArrowLeft, ChevronUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import FinishRide from "../components/FinishRide";
 
 const CaptainRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
+  const location = useLocation();
+  const rideData = location.state?.ride;
+
   return (
     <div className="bg-gray-100">
       <div className="h-screen lg:max-w-[50%] mx-auto bg-white shadow-lg">
@@ -40,6 +43,7 @@ const CaptainRiding = () => {
       </div>
       <div className="flex justify-center  items-center">
         <FinishRide
+          rideData={rideData}
           finishRidePanel={finishRidePanel}
           setFinishRidePanel={setFinishRidePanel}
         />

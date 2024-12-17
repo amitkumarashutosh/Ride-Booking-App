@@ -1,8 +1,27 @@
 import { ArrowDown, Coins, LocateFixed, MapPin } from "lucide-react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const FinishRide = ({ finishRidePanel, setFinishRidePanel }) => {
+const FinishRide = ({ finishRidePanel, setFinishRidePanel, rideData }) => {
+  const navigate = useNavigate();
+  const endRide = async () => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/api/rides/end-ride`,
+      {
+        rideId: rideData._id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      navigate("/captain-home");
+    }
+  };
   return (
     <div
       className={`fixed w-full z-10 bottom-0 ${
@@ -30,7 +49,9 @@ const FinishRide = ({ finishRidePanel, setFinishRidePanel }) => {
               alt="Driver"
               className="h-14 w-14 rounded-full object-cover"
             />
-            <h4 className="font-bold text-lg text-gray-800">Ashu Singh</h4>
+            <h4 className="font-bold text-lg text-gray-800">
+              {rideData?.user.fullname.firstname}
+            </h4>
           </div>
           <p className="font-medium text-lg text-gray-700">2.3 Km</p>
         </div>
@@ -41,12 +62,9 @@ const FinishRide = ({ finishRidePanel, setFinishRidePanel }) => {
           <div className="flex items-center gap-4 p-4 border border-gray-300 rounded-lg hover:shadow-md transition-all">
             <LocateFixed className="text-green-600 h-6 w-6" />
             <div>
-              <h4 className="font-semibold text-lg text-gray-800">
-                12/2 MS Residency
+              <h4 className="font-normal text-lg text-gray-800">
+                {rideData?.pickup}
               </h4>
-              <p className="text-sm text-gray-500">
-                3rd B Main Road, Bangalore 511023
-              </p>
             </div>
           </div>
 
@@ -54,12 +72,9 @@ const FinishRide = ({ finishRidePanel, setFinishRidePanel }) => {
           <div className="flex items-center gap-4 p-4 border border-gray-300 rounded-lg hover:shadow-md transition-all">
             <MapPin className="text-blue-600 h-6 w-6" />
             <div>
-              <h4 className="font-semibold text-lg text-gray-800">
-                12/2 MS Residency
+              <h4 className="font-normal text-lg text-gray-800">
+                {rideData?.destination}
               </h4>
-              <p className="text-sm text-gray-500">
-                3rd B Main Road, Bangalore 511023
-              </p>
             </div>
           </div>
 
@@ -67,17 +82,19 @@ const FinishRide = ({ finishRidePanel, setFinishRidePanel }) => {
           <div className="flex items-center gap-4 p-4 border border-gray-300 rounded-lg hover:shadow-md transition-all">
             <Coins className="text-yellow-600 h-6 w-6" />
             <div>
-              <h4 className="font-semibold text-lg text-gray-800">₹200.9</h4>
+              <h4 className="font-semibold text-lg text-gray-800">
+                ₹{rideData?.fare}
+              </h4>
               <p className="text-sm text-gray-500">Cash</p>
             </div>
           </div>
         </div>
-        <Link
-          to="/captain-home"
+        <button
+          onClick={endRide}
           className="flex-1 bg-green-600 w-full  text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition-all text-center"
         >
           Finish
-        </Link>
+        </button>
       </div>
     </div>
   );
